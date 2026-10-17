@@ -16,17 +16,25 @@ import androidx.room.RoomDatabase
 data class CustomFood(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    val kcalPer100g: Int, // 0 = not per-gram
-    val kcalPerUnit: Int  // 0 = not per-unit (e.g. "1 taco")
+    val per100g: Boolean,   // true = values per 100 g, false = per serving
+    val kcal: Int,
+    val protein: Float,     // grams
+    val fat: Float,         // grams
+    val carbs: Float,       // grams
+    val sugar: Float        // grams
 )
 
-/** One food logged on a given day. */
+/** One food logged on a given day (macro totals already scaled). */
 @Entity(tableName = "log_entries")
 data class LogEntry(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val date: String,   // "yyyy-MM-dd"
+    val date: String,       // "yyyy-MM-dd"
     val name: String,
-    val calories: Int   // total kcal
+    val calories: Int,      // kcal
+    val protein: Float,     // grams
+    val fat: Float,         // grams
+    val carbs: Float,       // grams
+    val sugar: Float        // grams
 )
 
 @Dao
@@ -42,12 +50,12 @@ interface AppDao {
     @Insert suspend fun insertLog(entry: LogEntry): Long
     @Query("SELECT * FROM log_entries WHERE date = :date ORDER BY id DESC")
     suspend fun getLogForDate(date: String): List<LogEntry>
+    @Query("SELECT * FROM log_entries WHERE date BETWEEN :start AND :end ORDER BY date DESC, id DESC")
+    suspend fun getLogBetween(start: String, end: String): List<LogEntry>
     @Delete suspend fun deleteLog(entry: LogEntry)
-    @Query("SELECT COALESCE(SUM(calories), 0) FROM log_entries WHERE date = :date")
-    suspend fun totalForDate(date: String): Int
 }
 
-@Database(entities = [CustomFood::class, LogEntry::class], version = 1, exportSchema = false)
+@Database(entities = [CustomFood::class, LogEntry::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dao(): AppDao
 
@@ -60,7 +68,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "calorias.db"
-                ).build().also { INSTANCE = it }
+                ).fallbackToDestructiveMigration().build().also { INSTANCE = it }
             }
     }
 }

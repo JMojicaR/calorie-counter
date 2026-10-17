@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.jmojicar.calorias.ui.AddFoodScreen
+import com.jmojicar.calorias.ui.CalendarScreen
 import com.jmojicar.calorias.ui.CaloriasTheme
 import com.jmojicar.calorias.ui.CalorieViewModel
 import com.jmojicar.calorias.ui.HomeScreen
@@ -43,6 +44,10 @@ class MainActivity : ComponentActivity() {
                             )
                             NavigationBarItem(
                                 selected = tab == 2, onClick = { tab = 2 },
+                                icon = { Text("📅") }, label = { Text("Calendario") }
+                            )
+                            NavigationBarItem(
+                                selected = tab == 3, onClick = { tab = 3 },
                                 icon = { Text("⚙️") }, label = { Text("Ajustes") }
                             )
                         }
@@ -52,7 +57,8 @@ class MainActivity : ComponentActivity() {
                         when (tab) {
                             0 -> HomeScreen(vm)
                             1 -> AddFoodScreen(vm)
-                            2 -> SettingsScreen(vm)
+                            2 -> CalendarScreen(vm)
+                            3 -> SettingsScreen(vm)
                         }
                     }
                 }

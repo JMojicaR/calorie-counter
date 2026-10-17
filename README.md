@@ -1,7 +1,8 @@
 # Contador de Calorías (Calorie Counter)
 
-A native Android app (Kotlin + Jetpack Compose) to track daily calories, with
-Mexican-dish coverage and supermarket-product lookup. UI in **Spanish**.
+A native Android app (Kotlin + Jetpack Compose) to track daily calories **and
+macronutrients** (protein, fat, carbs, sugar), with Mexican-dish coverage,
+supermarket-product lookup, and a **calendar/history register**. UI in **Spanish**.
 
 ## Features (→ requirements)
 
@@ -11,17 +12,29 @@ Mexican-dish coverage and supermarket-product lookup. UI in **Spanish**.
    Mexican dishes works offline; searching queries Open Food Facts (keyless) and,
    when a key is set, CalorieNinjas + USDA for better Mexican coverage. *(Añadir → Buscar / Platillos)*
 3. **Not found?** — if a dish isn't found, tap **"🌐 Buscar en internet"** to open
-   a web search, then save the dish + calories **locally** (Room database) via the
+   a web search, then save the dish + calories **and macros** locally (Room) via the
    *Manual* tab. Saved dishes appear under *Platillos*.
 4. **Supermarket products** — look up products by **barcode** or name via
    Open Food Facts (no key needed). *(Añadir → Código)*
+5. **Macronutrient counters** — track daily totals for **proteínas, grasas,
+   carbohidratos y azúcares** (grams), with optional daily goals (protein/fat/carbs)
+   shown as progress bars on the dashboard. *(Hoy + Ajustes)*
+6. **Calendar & register** — a month calendar showing per-day calorie totals; tap a
+   day to see that day's full register (calories + macros). *(Calendario tab)*
 
 ## Screens
 
-- **Hoy** — today's goal progress + logged foods (deleteable).
+- **Hoy** — goal progress + macronutrient dashboard + today's logged foods.
 - **Añadir** — 4 tabs: Buscar (text search), Código (barcode), Platillos (saved +
-  Mexican dishes), Manual (save custom + web search).
-- **Ajustes** — set goal + optional API keys (USDA / CalorieNinjas).
+  Mexican dishes), Manual (save custom dish with macros + web search).
+- **Calendario** — month calendar + per-day history register.
+- **Ajustes** — calorie + macro goals, optional API keys (USDA / CalorieNinjas).
+
+## Data persistence
+
+All data is stored in the device's **internal memory** via **Room** (SQLite at
+`/data/data/com.jmojicar.calorias/databases/calorias.db`) — dishes, daily log,
+and every day's macro totals survive app restarts.
 
 ## Tech stack
 
@@ -63,6 +76,7 @@ Enter them in **Ajustes → Claves de API**. Without keys the app still works
 
 ## Notes
 
-- Calories for the Mexican-dish seed list are ballpark values per typical portion.
+- Calories/macros for the Mexican-dish seed list are ballpark values per typical
+  portion; macro values are approximate (grams).
 - The debug APK is unsigned-release-signable; for Play Store you'd add a release
   signing config + `minifyEnabled` + an app icon.

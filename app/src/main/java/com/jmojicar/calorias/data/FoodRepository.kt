@@ -9,15 +9,13 @@ class FoodRepository(
 
     // ---- daily log ----
     suspend fun getLog(date: String) = dao.getLogForDate(date)
-    suspend fun totalFor(date: String) = dao.totalForDate(date)
-    suspend fun addLog(name: String, calories: Int, date: String) =
-        dao.insertLog(LogEntry(date = date, name = name, calories = calories))
+    suspend fun getLogBetween(start: String, end: String) = dao.getLogBetween(start, end)
+    suspend fun addLog(entry: LogEntry) = dao.insertLog(entry)
     suspend fun deleteLog(entry: LogEntry) = dao.deleteLog(entry)
 
     // ---- saved custom foods ----
     suspend fun getCustomFoods() = dao.getAllFoods()
-    suspend fun saveCustomFood(name: String, kcalPer100g: Int, kcalPerUnit: Int) =
-        dao.insertFood(CustomFood(name = name, kcalPer100g = kcalPer100g, kcalPerUnit = kcalPerUnit))
+    suspend fun saveCustomFood(food: CustomFood) = dao.insertFood(food)
     suspend fun deleteCustomFood(food: CustomFood) = dao.deleteFood(food)
 
     // ---- search across providers ----
