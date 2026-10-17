@@ -65,6 +65,7 @@ class CalorieViewModel(app: Application) : AndroidViewModel(app) {
             todayLog = repo.getLog(today)
             todayTotals = totalsOf(todayLog)
             customFoods = repo.getCustomFoods()
+            selectedLog = repo.getLog(selectedDate)
         }
     }
 
